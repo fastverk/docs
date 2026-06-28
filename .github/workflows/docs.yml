@@ -65,10 +65,12 @@ jobs:
       # Harvest each module's committed stardoc reference (docs/*.md) into the
       # Reference section. Uses `gh api` (no local checkouts in CI). This is why
       # the nightly + repository_dispatch rebuilds keep API docs current.
-      - name: harvest module reference (stardoc)
+      - name: harvest module reference (stardoc) + catalog (registry)
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: ./tools/harvest-reference.sh
+        run: |
+          ./tools/harvest-reference.sh
+          ./tools/harvest-catalog.sh
 
       # Build the branded book. Once brand >= 0.3.0 (with the mdBook theme) is
       # published, the override drops and brand resolves from the registry.
