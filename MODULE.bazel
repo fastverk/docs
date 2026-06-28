@@ -1,0 +1,24 @@
+# fastverk/docs — the docs.fastverk.com site.
+#
+# A Bazel-native mdBook (rules_mdbook) themed with the brand
+# (@brand//mdbook:theme). Guides are handwritten; per-module API reference is
+# stardoc-generated (a follow-up); the module catalog is harvested from the
+# bazel-registry. Built by `bazel build //:site` and published to GitHub Pages.
+module(
+    name = "fastverk_docs",
+    version = "0.0.0",
+)
+
+bazel_dep(name = "rules_mdbook", version = "0.3.1")
+# brand carries the mdBook theme (@brand//mdbook:theme). NOTE: the theme target
+# needs brand >= 0.3.0; until that's published, build with
+# `--override_module=brand=../brand`.
+bazel_dep(name = "brand", version = "0.2.0")
+# stardoc for the per-module API reference layer (wired in a follow-up).
+bazel_dep(name = "stardoc", version = "0.7.2")
+bazel_dep(name = "bazel_skylib", version = "1.8.2")
+
+# Hermetic mdbook + mdbook-mermaid.
+mdbook = use_extension("@rules_mdbook//mdbook:extensions.bzl", "mdbook")
+use_repo(mdbook, "mdbook", "mdbook_mermaid")
+register_toolchains("@mdbook//:mdbook_toolchain_def")

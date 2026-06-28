@@ -1,0 +1,85 @@
+name: docs
+
+# Build the branded mdBook (bazel //:site) and publish to GitHub Pages at
+# docs.fastverk.com. Rebuilds:
+#   - push        — content/theme/build changes on main
+#   - schedule    — nightly, so the registry-harvested module catalog stays fresh
+#   - workflow_dispatch — manual
+#   - repository_dispatch (docs-rebuild) — fired by OTHER repos when they
+#     change/release/deploy, so per-module docs + the catalog track the world.
+#     A constellation repo triggers it with:
+#       gh api repos/fastverk/docs/dispatches -f event_type=docs-rebuild
+#     (wired centrally via rules_ci's fastverk_project once the ratchet lands).
+on:
+  push:
+    branches: [main]
+    paths: ["src/**", "book.toml", "BUILD.bazel", "MODULE.bazel", ".github/workflows/docs.yml"]
+  schedule:
+    - cron: "17 7 * * *"   # 07:17 UTC nightly
+  workflow_dispatch:
+  repository_dispatch:
+    types: [docs-rebuild]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two Pages deploys at once; let the latest win.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: mint fastverk-ci-bot installation token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.FASTVERK_CI_BOT_APP_ID }}
+          private-key: ${{ secrets.FASTVERK_CI_BOT_PRIVATE_KEY }}
+          owner: fastverk
+
+      - uses: actions/checkout@v4
+
+      - uses: bazel-contrib/setup-bazel@0.13.0
+        with:
+          bazelisk-cache: true
+          disk-cache: true
+          repository-cache: true
+
+      # The .bazelrc points --credential_helper at this path; the prebuilt
+      # helper resolves fastverk private module fetches from GITHUB_TOKEN.
+      - name: install the credential helper (prebuilt, public release)
+        run: |
+          mkdir -p tools/credhelper
+          curl -fsSL -o tools/credhelper/fastverk-cred-helper \
+            https://github.com/fastverk/cred-helper/releases/download/credhelper-latest/cred-helper-linux-amd64
+          chmod +x tools/credhelper/fastverk-cred-helper
+
+      # Build the branded book. Once brand >= 0.3.0 (with the mdBook theme) is
+      # published, the override drops and brand resolves from the registry.
+      - name: bazel build the site
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: bazel build //:site
+
+      - name: unpack + add CNAME
+        run: |
+          set -euo pipefail
+          rm -rf _site && mkdir _site
+          tar -xzf bazel-bin/site.tar.gz -C _site
+          echo "docs.fastverk.com" > _site/CNAME
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deploy
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,15 @@
+common --enable_bzlmod
+common --experimental_isolated_extension_usages
+
+# fastverk registry chain (the constellation modules + BCR).
+common --registry=https://raw.githubusercontent.com/fastverk/bazel-registry/main/
+common --registry=https://bcr.bazel.build/
+
+# Private fastverk module sources resolve via the credential helper (installed
+# out-of-band; see fastverk/cred-helper). Mirrors the other repos' preamble.
+common --credential_helper=%workspace%/tools/credhelper/fastverk-cred-helper
+common --repo_env=GITHUB_TOKEN
+common --repo_env=GH_TOKEN
+
+test --test_output=errors
+test --test_summary=terse

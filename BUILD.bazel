@@ -1,0 +1,51 @@
+"""docs.fastverk.com — the fastverk docs site (mdBook), themed with the brand.
+
+`bazel build //:site` renders the book to `site.tar.gz` (HTML) using the
+hermetic mdbook toolchain + `@brand//mdbook:theme`. The Pages workflow extracts
+the tarball and publishes it.
+
+Layers (built up over increments):
+  1. Guides — handwritten markdown under src/.
+  2. Per-module API reference — stardoc-generated md (follow-up; one chapter per
+     module's .bzl, via a fastverk_module_docs() macro in rules_fastverk).
+  3. Module catalog — harvested from the bazel-registry (botnoc-readme pattern).
+"""
+
+load("@rules_mdbook//mdbook:defs.bzl", "mdbook_book")
+
+package(default_visibility = ["//visibility:public"])
+
+# Re-stage @brand//mdbook:theme (a pure static filegroup) into this package's
+# theme/ dir. rules_mdbook stages srcs by package-relative path, so the
+# package-relative genrule outs land at the book's theme/.
+genrule(
+    name = "brand_theme",
+    srcs = ["@brand//mdbook:theme"],
+    outs = [
+        "theme/css/variables.css",
+        "theme/css/custom.css",
+        "theme/fonts/fonts.css",
+        "theme/fonts/SpaceGrotesk-Medium.ttf",
+        "theme/fonts/SpaceGrotesk-SemiBold.ttf",
+        "theme/head.hbs",
+        "theme/favicon.svg",
+    ],
+    cmd = """
+mkdir -p "$(RULEDIR)/theme/css" "$(RULEDIR)/theme/fonts"
+for f in $(SRCS); do
+  base=$$(basename "$$f")
+  case "$$base" in
+    variables.css|custom.css) cp "$$f" "$(RULEDIR)/theme/css/$$base" ;;
+    fonts.css|*.ttf) cp "$$f" "$(RULEDIR)/theme/fonts/$$base" ;;
+    *) cp "$$f" "$(RULEDIR)/theme/$$base" ;;
+  esac
+done
+""",
+)
+
+mdbook_book(
+    name = "site",
+    book_toml = "book.toml",
+    srcs = glob(["src/**/*.md"]) + [":brand_theme"],
+    out = "site.tar.gz",
+)

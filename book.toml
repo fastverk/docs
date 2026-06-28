@@ -1,0 +1,14 @@
+[book]
+title = "fastverk"
+authors = ["fastverk"]
+description = "proven systems, built fast — the hermetic software works"
+language = "en"
+src = "src"
+
+[output.html]
+default-theme = "navy"
+preferred-dark-theme = "navy"
+additional-css = ["theme/css/custom.css"]
+no-section-label = true
+git-repository-url = "https://github.com/fastverk"
+edit-url-template = "https://github.com/fastverk/docs/edit/main/{path}"
