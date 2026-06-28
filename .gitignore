@@ -4,3 +4,6 @@ bazel-testlogs
 bazel-docs
 /bazel-*
 book/
+
+# Generated reference pages (harvested from module docs/*.md).
+src/reference/

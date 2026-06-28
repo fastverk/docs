@@ -62,6 +62,14 @@ jobs:
             https://github.com/fastverk/cred-helper/releases/download/credhelper-latest/cred-helper-linux-amd64
           chmod +x tools/credhelper/fastverk-cred-helper
 
+      # Harvest each module's committed stardoc reference (docs/*.md) into the
+      # Reference section. Uses `gh api` (no local checkouts in CI). This is why
+      # the nightly + repository_dispatch rebuilds keep API docs current.
+      - name: harvest module reference (stardoc)
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: ./tools/harvest-reference.sh
+
       # Build the branded book. Once brand >= 0.3.0 (with the mdBook theme) is
       # published, the override drops and brand resolves from the registry.
       - name: bazel build the site

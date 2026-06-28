@@ -19,8 +19,17 @@ bazel build //:site --override_module=brand=../brand
 - `src/` — handwritten guides (overview, platform, constellation, quick-start,
   philosophy), seeded from the org profile.
 - `theme/` — staged from `@brand//mdbook:theme` at build time (not committed).
-- Per-module **API reference** (stardoc-generated) and the **module catalog**
-  (harvested from the bazel-registry) are added by follow-up increments.
+- `src/reference/` — **generated** (gitignored): each module's committed stardoc
+  `docs/*.md`, harvested by [`tools/harvest-reference.sh`](tools/harvest-reference.sh)
+  into a Reference section. Run it before building:
+
+  ```sh
+  ./tools/harvest-reference.sh        # local sibling checkouts, or `gh api` in CI
+  bazel build //:site --override_module=brand=../brand
+  ```
+
+  The nightly + `repository_dispatch` rebuilds re-harvest, so API docs track the
+  modules. The **module catalog** (registry-harvested) is the remaining layer.
 
 ## Publishing
 
