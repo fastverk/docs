@@ -232,6 +232,9 @@
     "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/bazel_skylib/1.7.1/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/bazel_skylib/1.8.1/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/bazel_skylib/1.8.2/MODULE.bazel": "not found",
+    "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/brand/0.2.0/MODULE.bazel": "5103e7aad81ba8d05d08de5a4d431694a9937a29bfabd470706407aeca64e7e7",
+    "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/brand/0.3.1/MODULE.bazel": "e3b62c1d46ea0838c46eb8060fb349da470f424c611914747289702d129be8e1",
+    "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/brand/0.3.1/source.json": "ba3849d1d142a6b85c60373be6a75f2ed100aad5077fa6f6d83e33ccfcf01445",
     "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/buildozer/8.5.1/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/google_benchmark/1.8.2/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/googletest/1.11.0/MODULE.bazel": "not found",
@@ -285,6 +288,8 @@
     "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/rules_cc/0.2.13/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/rules_cc/0.2.17/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/rules_cc/0.2.8/MODULE.bazel": "not found",
+    "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/rules_fastverk/0.0.2/MODULE.bazel": "8b86abbde761524fc5d993e2de9c5a6a11dae4601f90f28035bbac87ebf81bd8",
+    "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/rules_fastverk/0.0.2/source.json": "a710ef77e5f468381fa88cecaa705fa7c6c20325c878483e56b5d34c2c9ae2ab",
     "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/rules_foreign_cc/0.9.0/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/rules_fuzzing/0.5.2/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/rules_github/0.1.1/MODULE.bazel": "5ba48515bab9ac717c1f50cf8ef67fcf80299f479a34bfdbb5654d51039d5eb8",
@@ -309,6 +314,8 @@
     "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/rules_license/0.0.3/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/rules_license/0.0.7/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/rules_license/1.0.0/MODULE.bazel": "not found",
+    "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/rules_mdbook/0.3.1/MODULE.bazel": "eef802f9887260f7e8c0d115257822d594fae11170c8c3cee24270097b39ebb4",
+    "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/rules_mdbook/0.3.1/source.json": "1d2fe9108147c2d7ce335366b86e698e80465145ce06072e7aaf4333b5759fa1",
     "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/rules_pkg/0.7.0/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/rules_pkg/1.0.1/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/fastverk/bazel-registry/main/modules/rules_proto/4.0.0/MODULE.bazel": "not found",
@@ -662,7 +669,7 @@
     "@@rules_tectonic+//tectonic:extensions.bzl%tectonic": {
       "general": {
         "bzlTransitiveDigest": "ZktTb0mbZEO39u1qfCMF+pZxTkQVnvMIb/wsDagEzYA=",
-        "usagesDigest": "ilRP/FUjSqo8qo+MotkfpDCyzi6iN5QvRWCcfQRDZ00=",
+        "usagesDigest": "XluIX7FUAaU2KydQdjEMU9Ml/aRBoaPygHJZ5NKtaII=",
         "recordedInputs": [
           "REPO_MAPPING:rules_tectonic+,rules_github rules_github+"
         ],
