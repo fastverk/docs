@@ -5,11 +5,8 @@ common --experimental_isolated_extension_usages
 common --registry=https://raw.githubusercontent.com/fastverk/bazel-registry/main/
 common --registry=https://bcr.bazel.build/
 
-# Private fastverk module sources resolve via the credential helper (installed
-# out-of-band; see fastverk/cred-helper). Mirrors the other repos' preamble.
-common --credential_helper=%workspace%/tools/credhelper/fastverk-cred-helper
-common --repo_env=GITHUB_TOKEN
-common --repo_env=GH_TOKEN
+# Every dep is public (brand, rules_fastverk, rules_mdbook, stardoc, BCR), so no
+# credential helper is needed — the docs build is keyless.
 
 test --test_output=errors
 test --test_summary=terse

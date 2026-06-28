@@ -37,14 +37,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
-      - name: mint fastverk-ci-bot installation token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.FASTVERK_CI_BOT_APP_ID }}
-          private-key: ${{ secrets.FASTVERK_CI_BOT_PRIVATE_KEY }}
-          owner: fastverk
-
       - uses: actions/checkout@v4
 
       - uses: bazel-contrib/setup-bazel@0.13.0
@@ -53,31 +45,20 @@ jobs:
           disk-cache: true
           repository-cache: true
 
-      # The .bazelrc points --credential_helper at this path; the prebuilt
-      # helper resolves fastverk private module fetches from GITHUB_TOKEN.
-      - name: install the credential helper (prebuilt, public release)
-        run: |
-          mkdir -p tools/credhelper
-          curl -fsSL -o tools/credhelper/fastverk-cred-helper \
-            https://github.com/fastverk/cred-helper/releases/download/credhelper-latest/cred-helper-linux-amd64
-          chmod +x tools/credhelper/fastverk-cred-helper
-
-      # Harvest each module's committed stardoc reference (docs/*.md) into the
-      # Reference section. Uses `gh api` (no local checkouts in CI). This is why
-      # the nightly + repository_dispatch rebuilds keep API docs current.
+      # Harvest each module's committed stardoc reference (docs/*.md) + the
+      # module catalog into the book. The harvested sources are public, so the
+      # default token suffices. Nightly + repository_dispatch keep them current.
       - name: harvest module reference (stardoc) + catalog (registry)
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           ./tools/harvest-reference.sh
           ./tools/harvest-catalog.sh
 
-      # Build the branded book. Once brand >= 0.3.0 (with the mdBook theme) is
-      # published, the override drops and brand resolves from the registry.
+      # Build the branded book. Every dep (brand, rules_fastverk, rules_mdbook,
+      # stardoc) is public, so the build is KEYLESS — no credential helper, no
+      # app token. Requires brand >= 0.3.0 + rules_fastverk 0.0.1 in the registry.
       - name: bazel build the site
-        env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: bazel build //:site
 
       - name: unpack + add CNAME
