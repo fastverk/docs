@@ -12,9 +12,9 @@ module(
 # fastverk_mdbook (the brand-themed mdBook macro) comes from rules_fastverk;
 # it wraps rules_mdbook + stages @brand//mdbook:theme. brand 0.3.0 carries the
 # theme. All resolve from the registry (no overrides needed).
-bazel_dep(name = "rules_fastverk", version = "0.0.1")
+bazel_dep(name = "rules_fastverk", version = "0.0.2")
 bazel_dep(name = "rules_mdbook", version = "0.3.1")
-bazel_dep(name = "brand", version = "0.3.0")
+bazel_dep(name = "brand", version = "0.3.1")
 # stardoc for the per-module API reference layer (wired in a follow-up).
 bazel_dep(name = "stardoc", version = "0.7.2")
 bazel_dep(name = "bazel_skylib", version = "1.8.2")
