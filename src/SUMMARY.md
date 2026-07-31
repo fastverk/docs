@@ -5,6 +5,7 @@
 - [The platform](platform.md)
 - [The constellation](constellation.md)
 - [Quick start](quickstart.md)
+- [Agent coordination](agents.md)
 - [Philosophy](philosophy.md)
 
 # Reference

@@ -17,4 +17,6 @@ end to end.
 - **[The constellation](constellation.md)** — the `rules_*` registry: one module
   per concern, composed into hermetic builds.
 - **[Quick start](quickstart.md)** — wire the registry into your own Bazel build.
+- **[Agent coordination](agents.md)** — the agent-to-agent tool surface: how a
+  fleet of coding agents discovers, claims, hands off, and asks a human.
 - **[Philosophy](philosophy.md)** — Bazel-native, hermetic, honest about gaps.
