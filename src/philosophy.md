@@ -12,7 +12,10 @@
 
 ## Contributing
 
-Each module has its own issues + PRs. For org-wide coordination (cross-module
-bumps, registry-tier moves, agent dispatch), **botnoc** — the bot-driven Network
-Operations Center — is the entry point. botnoc renders the module catalog above
-and orchestrates work across the constellation.
+Issues and PRs land on the **ship vehicle** that holds the module
+([map](vehicles.md)) — not on a lockstep repo-wide version. Each module
+keeps its own `MODULE.bazel` name and version. For org-wide coordination
+(cross-module bumps, registry-tier moves, agent dispatch), **botnoc** —
+the bot-driven Network Operations Center — is the entry point. botnoc
+renders the module catalog above and orchestrates work across the
+constellation.

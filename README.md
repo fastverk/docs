@@ -16,8 +16,8 @@ bazel build //:site --override_module=brand=../brand
 
 ## Structure
 
-- `src/` — handwritten guides (overview, platform, constellation, quick-start,
-  philosophy), seeded from the org profile.
+- `src/` — handwritten guides (overview, platform, constellation, ship
+  vehicles, quick-start, philosophy), seeded from the org profile.
 - `theme/` — staged from `@brand//mdbook:theme` at build time (not committed).
 - `src/reference/` — **generated** (gitignored): each module's committed stardoc
   `docs/*.md`, harvested by [`tools/harvest-reference.sh`](tools/harvest-reference.sh)

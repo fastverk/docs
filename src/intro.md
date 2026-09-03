@@ -16,6 +16,8 @@ end to end.
   brand, and the turnkey AWS install.
 - **[The constellation](constellation.md)** — the `rules_*` registry: one module
   per concern, composed into hermetic builds.
+- **[Ship vehicles](vehicles.md)** — where each legacy repo and module lives
+  now: six git vehicles, independent Bazel names and versions.
 - **[Quick start](quickstart.md)** — wire the registry into your own Bazel build.
 - **[Agent coordination](agents.md)** — the agent-to-agent tool surface: how a
   fleet of coding agents discovers, claims, hands off, and asks a human.

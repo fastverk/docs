@@ -4,6 +4,7 @@
 
 - [The platform](platform.md)
 - [The constellation](constellation.md)
+- [Ship vehicles](vehicles.md)
 - [Quick start](quickstart.md)
 - [Agent coordination](agents.md)
 - [Philosophy](philosophy.md)

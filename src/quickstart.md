@@ -22,7 +22,8 @@ bazel_dep(name = "rules_cloudformation", version = "0.8.0")
 ```
 
 See each module's API reference for module-specific setup (toolchains,
-extensions, `use_repo`).
+extensions, `use_repo`). To find where a module's source lives after the
+repo collapse, see **[Ship vehicles](vehicles.md)**.
 
 ## 3. Build
 
