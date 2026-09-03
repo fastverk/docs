@@ -4,6 +4,12 @@ The `rules_*` registry — one module per concern, composed into hermetic builds
 Each lands in the **fastverk bazel-registry**; per-module API reference
 (stardoc-generated) and this catalog are kept current by the nightly rebuild.
 
+Source trees for those modules now live in the
+[`tomato-bazel/rules`](https://github.com/tomato-bazel/rules) git vehicle
+(one directory per module, same `module(name)` / `module(version)` as
+before). The full legacy-repo map — including platform, desktop, contracts,
+plugin-shell, and spec — is **[Ship vehicles](vehicles.md)**.
+
 ## Categories
 
 - **Language toolchains** — `rules_uv`, `rules_lean`, `rules_postgres`, `rules_autoconf`
