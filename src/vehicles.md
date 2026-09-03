@@ -1,8 +1,7 @@
 # Ship vehicles
 
 Git repos were collapsed by **ship vehicle**. Bazel module names and
-versions were not. Each of the six vehicles carries a
-[`LEDGER.md`](https://github.com/tomato-bazel/rules/blob/main/LEDGER.md)
+versions were not. Each of the six vehicles carries a `LEDGER.md`
 (the provenance record) and CI. Consumers still write
 `bazel_dep(name = "…", version = "…")` against the same identities as
 before.
