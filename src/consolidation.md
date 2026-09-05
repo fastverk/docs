@@ -101,25 +101,71 @@ not move, and are not pending moves.
 | Infra: `landing-zone`, `runners`, `images`, `badge` | AWS accounts, CI runners, build images, badge server. |
 | `next.js` | External OSS fork. Not part of the constellation. |
 
-## The `fastverk` meta-repo is narrowed, not retired
+## The `fastverk` meta-repo: reconcile before deleting
 
-`fastverk` still owns real, unduplicated work: the `fv` product CLI,
+`fastverk` owns real, unduplicated work — the `fv` product CLI,
 `proto/fastverk/build/v1/graph.proto`, the devcontainer, the migration and
-workspace tooling, and the org design corpus.
+workspace tooling, and the org design corpus. It **also** carries trees that
+duplicate the desktop vehicle: `app/desktop`, `app/settings`,
+`tools/credhelper`, `tools/macos`, and four of the five protos under
+`proto/fastverk/v1/`.
 
-What it also carried were **stale forks** of trees that now live in the
-desktop vehicle. Those are removed rather than retired, because they were
-never the canonical copy:
+Those look like stale forks. **Three of them are not**, and deleting the set
+on that assumption would lose shipped work.
 
-| Removed from `fastverk` | Canonical home | Evidence it was stale |
+| Duplicated tree | Ahead | Evidence |
 | --- | --- | --- |
-| `app/desktop`, `app/settings` | `desktop/fastverk-app` | The meta-repo tray had no identity RPCs and no busy-pulse; `fastverk-app` has both. |
-| `tools/credhelper` | `desktop/fastverk-app` | Same crate name, older tree. |
-| `tools/macos` | `desktop/fastverk-app` | `fastverk-app` also packages the Swift dashboard and `fvd-json`; the meta-repo copy packaged neither. |
-| `proto/fastverk/v1/{connection,fvd,maintenance,repos}.proto` | `desktop/fvkit` | `fvkit` carries the same four plus `identity/v1` and `plugin/v1`. |
+| `app/desktop` | `fastverk-app` | 426 lines vs 230; the vehicle copy has the identity RPCs and the busy-pulse tray, the meta-repo copy has neither. |
+| `app/settings` | **`fastverk`** | Meta-repo last touched 2026-08-13 (*Remove BuildBuddy from the settings connect UI*, #38); the vehicle copy last touched 2026-06-28 and still offers a `buildbuddy` provider the credential helper now refuses. |
+| `tools/credhelper` | **`fastverk`** | Meta-repo 2026-07-08 vs vehicle 2026-06-25 — a build fix (fetch the `fvkit` git-dep over https, not ssh). |
+| `tools/macos` | `fastverk-app` | The vehicle also packages the Swift dashboard and `fvd-json`, and its `release.yml` does Developer-ID notarization plus the CDN push. The meta-repo's is the older, ad-hoc-signed path. |
+| `proto/.../connection.proto` | tie | Byte-identical. Meta-repo's commit is newer but its content already matches. |
+| `proto/.../repos.proto` | tie | Byte-identical. |
+| `proto/.../fvd.proto` | `fvkit` | 338 lines vs 324; `fvkit` **reserved** tag 9 (`api_key`) on 2026-08-14, the meta-repo copy still declares `string api_key = 9`. |
+| `proto/.../maintenance.proto` | `fvkit` | 160 lines vs 104. |
 
-`graph.proto` stays: it is the one proto in that tree with no `fvkit`
-counterpart.
+`graph.proto` is unduplicated and stays regardless.
+
+### One logical change, landed in two repos
+
+The `app/settings` and `fvd.proto` rows are two halves of the **same** piece
+of work, and neither repo has both:
+
+- 2026-08-13, in `fastverk`: the settings Connect panel drops the BuildBuddy
+  provider and the API-key field.
+- 2026-08-14, in `fvkit`: `ConnectProviderRequest.api_key` is reserved on the
+  fvd IPC contract. That commit message reads *"Tracing every caller, in this
+  repo and in fastverk-app, the field has no sender"* — the author had to
+  trace three repos to make one change.
+
+So `fastverk-app` still renders a provider that no longer resolves, and
+`fastverk`'s copy of the contract still carries a plaintext secret field that
+`fvkit` retired. This is the clearest single argument for the consolidation,
+and simultaneously the reason the delete cannot be done blind.
+
+### What that implies for sequencing
+
+Removing these trees is a **reconciliation**, not a deletion:
+
+1. Port the BuildBuddy removal and the credential-helper https fix from
+   `fastverk` into `desktop/fastverk-app`.
+2. Confirm the vehicle's `app/settings` builds — it and `app/desktop` link
+   `tao` / `tray-icon` / `eframe` and are macOS-only, so this needs a macOS
+   runner, not a Linux CI leg.
+3. Delete the meta-repo copies, and with them `tools/macos` and the competing
+   `release.yml`. The in-app self-updater watches `fastverk-app` releases, so
+   the meta-repo currently publishes a `.dmg` nothing consumes.
+4. Delete the four duplicated protos. They are lint-only there: `cli/fv`
+   compiles `fvkit`'s protos through `@fvkit//crates/fvkit-core`, and the
+   `connection.proto` parity check against the canonical cred-helper already
+   runs in `fvkit` too. Keep `graph.proto`.
+5. Repoint `tools/ci/bootstrap-cred-helper.sh`. It writes a `$GITHUB_TOKEN`
+   shim, then rebuilds the real helper from `//tools/credhelper` and swaps it
+   in. Its own comment notes the two are functionally identical on CI, so the
+   shim alone suffices once the crate is gone.
+
+Until step 2 has a green macOS build, the duplicated trees stay. A blind
+delete here would ship exactly the regression this page exists to prevent.
 
 ## Plugin crates: one authoritative copy
 
@@ -156,9 +202,11 @@ Each step is independently verifiable and none of them break a consumer.
 1. **Retire the six in-sync source repos.** Banner + `retired` workflow.
    Safe now precisely *because* they are in sync — no unimported work is
    stranded. ✅
-2. **Narrow the `fastverk` meta-repo.** Delete the stale forks and repoint
-   the build. ✅
-3. **Record authority for the plugin crates** and guard the drift. ✅
+2. **Record authority for the plugin crates** and make the divergence
+   visible. ✅
+3. **Reconcile the `fastverk` meta-repo duplicates** — port the two
+   meta-repo-ahead trees into the vehicle, verify on macOS, then delete.
+   Needs a macOS build; see above.
 4. **Publish from vehicle tags.** Cut the next `fvkit` / `forge` release from
    `<module>/vX.Y.Z` on the vehicle via `rels`. Until this lands, no consumer
    depends on the vehicle, which is why archiving waits.
@@ -168,6 +216,11 @@ Each step is independently verifiable and none of them break a consumer.
 6. **Converge the botnoc plugin crates** onto tagged git-deps.
 7. **Import `geetch`** into `platform` when it is past scaffold.
 8. **Archive the retired remotes** — owner action, only after step 4.
+
+Steps 1 and 2 are done. Step 3 is the next one with real code motion, and it
+is deliberately *not* batched with step 1: retiring a repo whose tree is
+identical to the vehicle's is a bookkeeping change, while reconciling one
+whose tree has diverged is a build-verified merge.
 
 ## What consolidation must not do
 
@@ -181,6 +234,9 @@ Each step is independently verifiable and none of them break a consumer.
   planes with four failure modes.
 - **Do not subtree `brand` into a vehicle.** `site` and `docs` consume it
   too; the desktop LEDGER excludes it on purpose.
-- **Do not sync mirrored files by copying.** The plugin-crates inversion is
-  the standing warning: the copy labelled authoritative was the stale one.
-  Converge per symbol, with a diff.
+- **Do not sync duplicated trees by copying, in either direction.** Two
+  independent findings on this page say the same thing: the plugin-crate copy
+  labelled authoritative was the stale one, and the meta-repo trees that look
+  like abandoned forks include the *newest* copy of `app/settings`. Which
+  side is ahead is a per-tree question — sometimes a per-file one — so
+  converge with a diff and a date, never with a `cp -r`.
