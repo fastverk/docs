@@ -11,6 +11,11 @@ before.
 used `git subtree add` **without** `--squash`, so source history lives
 under the prefix. Source repos were not deleted.
 
+Six of them are now **retired**: the vehicle is the edit surface, the
+source remote keeps its history, tags, and published registry versions.
+See [Consolidation](consolidation.md) for what that means and which
+repos stay live.
+
 ## How to find a module
 
 1. Look up the legacy repo (or module name) in the map below.
@@ -202,6 +207,8 @@ not here.
 | [fastverk/service-finder](https://github.com/fastverk/service-finder) | [`service-finder`](https://github.com/fastverk/platform/tree/main/service-finder) | `service_finder` | 0.0.1 |
 | [fastverk/wave](https://github.com/fastverk/wave) | [`wave`](https://github.com/fastverk/platform/tree/main/wave) | `wave` | 0.1.0 |
 
+All four source repos are [retired](consolidation.md): edit here, not there.
+
 | Legacy repo | Path | Disposition |
 |---|---|---|
 | fastverk/plugin-planning | [`wave`](https://github.com/fastverk/platform/tree/main/wave) | **absorb** — not a module directory |
@@ -216,6 +223,8 @@ Directory names match the GitHub repo (`service-finder`); Bazel
 |---|---|---|---|
 | [fastverk/fvkit](https://github.com/fastverk/fvkit) | [`fvkit`](https://github.com/fastverk/desktop/tree/main/fvkit) | `fvkit` | 0.0.8 |
 | [fastverk/fastverk-app](https://github.com/fastverk/fastverk-app) | [`fastverk-app`](https://github.com/fastverk/desktop/tree/main/fastverk-app) | `fastverk-app` | 0.0.2 |
+
+Both source repos are [retired](consolidation.md): edit here, not there.
 
 No absorb rows. [`brand`](https://github.com/fastverk/brand) stays its
 own repo.
@@ -238,6 +247,8 @@ Tags stay root `vX.Y.Z` and must match `module(version)`.
 
 ## See also
 
+- **[Consolidation](consolidation.md)** — which source repos are
+  retired, what retirement means, and the remaining sequence.
 - **[The constellation](constellation.md)** — registry catalog (names
   and versions consumers pin).
 - **[The platform](platform.md)** — products that sit on these modules.
