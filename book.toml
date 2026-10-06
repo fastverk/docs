@@ -1,7 +1,7 @@
 [book]
 title = "fastverk"
 authors = ["fastverk"]
-description = "proven systems, built fast — the hermetic software works"
+description = "Agents that behave. Coding agents inside real limits, and every test a change could affect run before anything merges."
 language = "en"
 src = "src"
 

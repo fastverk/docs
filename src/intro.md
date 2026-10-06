@@ -1,14 +1,16 @@
 # fastverk
 
-**proven systems, built fast — the hermetic software works.**
+**Agents that behave.**
 
-A vertically-integrated, Bazel-native platform for complex, multi-modal
-software, and the `rules_*` constellation it's built on — every module one
-concern, composed into hermetic, reproducible builds.
+fastverk puts coding agents to work inside real limits. Each task gets a budget,
+a lease on the packages it may change, and a person who signs off. Every change
+runs every test it could affect, on remote execution, before anything merges.
+It works with a Bazel codebase on GitHub or self-hosted GitLab.
 
-Managed cloud RBE + cache, a WireGuard mesh, and source hosting compose on top:
-the build, the network, the source, and the machine — reproducible and verified,
-end to end.
+Underneath is a Bazel-native platform: a public module registry (the `rules_*`
+constellation, one concern per module), hermetic remote builds with a shared
+cache, and the source and network layers that compose on top. These docs cover
+how to use it. The product overview is at [fastverk.com](https://fastverk.com).
 
 ## Where to go next
 
